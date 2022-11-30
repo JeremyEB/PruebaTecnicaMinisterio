@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudiantes</title>
+    <link rel="stylesheet" href="../Assets/styles.css">
+     <!-- CSS only -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body class="container-body">
+    <header class="container-header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item active">
+                <a class="nav-link" href="../Index.html">Home<a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./CRUD_Estudiante.html">CRUD Estudiante</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./Listado_Estudiantes.html">Ver Listado Estudiante</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <br>
+      </header>
+    <div class="containerIMG">
+        <img src="../Assets/MEPyD.png" class="IMG1">
+    </div>
+    <h1>Estudiantes</h1>
+    <hr>
+    <form id="frm">
+        <input type="hidden" value="" name="ID_ALUMNO" id="ID_ALUMNO">
+        <div class="mb-3">
+            <label class="form-label">ID_Estudiante: </label>
+            <input type="number" name="ID" id="ID" disabled="True" class="col-from-label">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Nombre: </label>
+            <input type="text" name="Nombre" id="Nombre" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Apellidos: </label>
+            <input type="text" name="Apellidos" id="Apellidos" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Fecha Nacimiento: </label>
+            <input type="text" name="Fecha_Nacimiento" id="Fecha_Nacimiento" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Materia Español: </label>
+            <input type="text" name="Materia_Espanol" id="Materia_Espanol" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label>Materia Matematicas: </label>
+            <input type="text" name="Materia_Matematicas" id="Materia_Matematicas" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label>Materia Sociales: </label>
+            <input type="text" name="Materia_Sociales" id="Materia_Sociales" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label>Materia Naturales: </label>
+            <input type="text" name="Materia_Naturales" id="Materia_Naturales" class="form-control">
+        </div>
+        <input type="button" value="Guardar" class="btn btn-primary" onclick="Post();">
+    </form>
+    <hr>
+    <div id="divLista"></div>
+    <br>
+    <div class="container">
+        <footer class="py-3 my-4">
+          <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+          </ul>
+          <p class="text-center text-muted">&copy; 2022 Jeremy Encarnacion, Inc</p>
+        </footer>
+      </div>
+</body>
+</html>
+<script>
+    var url = "https://localhost:44327/api/alumnos";
+
+    Get();
+
+    function Guardar(){
+        if(document.getElementById("ID"),value!=""){
+            Edit();
+        }else{
+            Post();
+        }
+    }
+
+    function Post(){
+        fetch(url, {
+            method: "POST",
+            body: JSON.stringify({
+                Nombre:document.getElementById("Nombre").value,
+                Apellido:document.getElementById("Apellidos").value,
+                Fecha_Nacimiento:document.getElementById("Fecha_Nacimiento").value,
+                Materia_Espanol:document.getElementById("Materia_Espanol").value,
+                Materia_Matematicas:document.getElementById("Materia_Matematicas").value,
+                Materia_Sociales:document.getElementById("Materia_Sociales").value,
+                Materia_Naturales:document.getElementById("Materia_Naturales").value,
+            }),
+                headers:{
+                    'Accept':"application/json",
+                    "Content-Type":"application/json"
+                }
+        }).then(function(response){
+            if(response.ok){
+                return response.text();
+            }else{
+                alert("Error al solicitar la solicitud");
+            }
+        }).then(function(Data){
+            console.log(Data);
+            Get();
+        })
+    }
+
+    function Delete(idAlumnos){
+        fetch(url, {
+            method: "DELETE",
+            body: JSON.stringify({
+                ID_ALUMNOS: idAlumnos
+            }),
+                headers:{
+                    'Accept':"application/json",
+                    "Content-Type":"application/json"
+                }
+        }).then(function(response){
+            if(response.ok){
+                return response.text();
+            }else{
+                alert("Error al solicitar la solicitud");
+            }
+        }).then(function(Data){
+            console.log(Data);
+            Get();
+        })
+    }
+
+    function OpenEdit(idAlumnos,nombre, apellido, fechaNacimiento, materiaEspanol, materiaMatematicas, materiaSociales, materiaNaturales){
+        document.getElementById("ID").value=idAlumnos;
+        document.getElementById("Nombre").value=nombre;
+        document.getElementById("Apellidos").value=apellido;
+        document.getElementById("Fecha_Nacimiento").value=fechaNacimiento;
+        document.getElementById("Materia_Espanol").value=materiaEspanol;
+        document.getElementById("Materia_Matematicas").value=materiaMatematicas;
+        document.getElementById("Materia_Sociales").value=materiaSociales;
+        document.getElementById("Materia_Naturales").value=materiaNaturales;
+    }
+
+    function Edit(){
+        fetch(url, {
+        method: "PUT",
+        body: JSON.stringify({
+        idAlumnos: document.getElementById("ID").value,
+        nombre: document.getElementById("Nombre").value,
+        apellido: document.getElementById("Apellidos").value,
+        fechaNacimiento: document.getElementById("Fecha_Nacimiento").value,
+        materiaEspanol: document.getElementById("Materia_Espanol").value,
+        materiaMatematicas: document.getElementById("Materia_Matematicas").value,
+        materiaSociales: document.getElementById("Materia_Sociales").value,
+        materiaNaturales: document.getElementById("Materia_Naturales").value,
+        }),
+            headers:{
+                'Accept':"application/json",
+                "Content-Type":"application/json"
+        }
+        }).then(function(response){
+            if(response.ok){
+                return response.text();
+            }else{
+                alert("Error al solicitar la solicitud");
+            }
+        }).then(function(Data){
+            console.log(Data);
+            Get();
+            document.getElementById("ID").value="";
+        })
+    }
+
+    function Get(){
+        fetch(url).then(function(response){
+            return response.json();
+        }).then(function(Data){
+            document.getElementById("divLista").innerHTML="";
+            for(i=0; i<Data.length; i++){
+                let divElement = document.createElement("div");
+                let divSpan = document.createElement("span");
+                let divButtonDelete = document.createElement("button");
+                let divButtonEdit = document.createElement("button");
+                divSpan.innerHTML = Data[i].idAlumnos+" "+Data[i].nombre+" "+Data[i].apellido+" "+Data[i].fechaNacimiento;
+                //Textos a los botones
+                divButtonDelete.innerHTML="Eliminar";
+                divButtonDelete.MiId=Data[i].idAlumnos;
+                //Creando La funcion eliminar
+                divButtonDelete.addEventListener("click", function(mibutton){
+                    Delete(mibutton.target.MiId);
+                });
+                divButtonEdit.innerHTML="Editar";
+                divButtonEdit.MiId=Data[i].idAlumnos;
+                divButtonEdit.MiNombre=Data[i].nombre;
+                divButtonEdit.MiApellido=Data[i].apellido;
+                divButtonEdit.MiFecha=Data[i].fechaNacimiento;
+                divButtonEdit.MiMateriaEspanol=Data[i].materiaEspanol;
+                divButtonEdit.MiMateriaMatematicas=Data[i].materiaMatematicas;
+                divButtonEdit.MiMateriaSociales=Data[i].materiaSociales;
+                divButtonEdit.MiMateriaNaturales=Data[i].materiaNaturales;
+                //Creando La funcion Editar
+                divButtonEdit.addEventListener("click", function(mibutton){
+                    OpenEdit(
+                        mibutton.target.MiId,
+                        mibutton.target.MiNombre,
+                        mibutton.target.MiApellido,
+                        mibutton.target.MiFecha,
+                        mibutton.target.MiMateriaEspanol,
+                        mibutton.target.MiMateriaMatematicas,
+                        mibutton.target.MiMateriaSociales,
+                        mibutton.target.MiMateriaNaturales
+                    );
+                });
+                divElement.appendChild(divSpan);
+                divElement.appendChild(divButtonDelete);
+                divElement.appendChild(divButtonEdit);
+                document.getElementById("divLista").appendChild(divElement);
+            }
+        });
+    }
+</script>
